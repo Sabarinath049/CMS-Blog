@@ -7,7 +7,16 @@ export const getPosts = async () => {
     query MyQuery {
       postsConnection {
         edges {
+          cursor
           node {
+            author {
+              bio
+              name
+              id
+              photo {
+                url
+              }
+            }
             createdAt
             slug
             title
@@ -29,3 +38,30 @@ export const getPosts = async () => {
 
   return result.postsConnection.edges;
 };
+
+export const getRecentPosts = async () => {
+  const query = gql`
+  query getPostDetails() {
+    posts(
+      orderBy: createdAt_ASC
+      last: 3
+      ) {
+        title
+        featuredImage {
+          url
+        }
+        createdAt
+        slug
+      }
+  }
+  `;
+  const result = await request(graphqlAPI, query);
+
+  return result.posts;
+};
+
+/*export const getSimilarPosts = async () => {
+  const query = gql`
+    query GetPostDetails
+  `
+}*/
